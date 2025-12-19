@@ -1,30 +1,47 @@
-# CricOptima - Production Dockerfile
-FROM python:3.11-slim
+# Stage 1: Builder
+FROM python:3.11-slim as builder
 
 WORKDIR /app
 
-# Environment
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
+    PYTHONUNBUFFERED=1
 
-# Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
-# Copy application
+# Stage 2: Runtime
+FROM python:3.11-slim
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Create non-root user
+RUN addgroup --system app && adduser --system --group app
+
+# Copy wheels from builder
+COPY --from=builder /app/wheels /wheels
+COPY --from=builder /app/requirements.txt .
+
+# Install dependencies from wheels
+RUN pip install --no-cache /wheels/*
+
+# Copy application code
 COPY . .
 
-# Create directories
-RUN mkdir -p ml_models data
+# Set ownership
+RUN chown -R app:app /app
+
+# Switch to non-root user
+USER app
 
 # Expose ports
 EXPOSE 8000 8501
 
-# Default: API server
+# Default command
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]

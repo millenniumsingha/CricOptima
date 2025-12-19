@@ -91,6 +91,17 @@ async def startup():
     print(f"✅ Loaded {len(get_player_pool().players)} players")
 
 
+@app.get("/health")
+def health_check():
+    """Health check endpoint."""
+    pool = get_player_pool()
+    return {
+        "status": "ok",
+        "version": "1.0.0",
+        "model_loaded": _predictor._is_fitted if _predictor else False,
+        "players_available": len(pool.players) if pool else 0
+    }
+
 @app.get("/", response_model=dict)
 async def root():
     """API root with info."""

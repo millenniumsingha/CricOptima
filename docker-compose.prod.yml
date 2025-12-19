@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Base API Service
+  api:
+    build: .
+    container_name: cricoptima_api_prod
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --proxy-headers
+    restart: always
+    volumes:
+      - ./data:/app/data
+      - ./ml_models:/app/ml_models
+    env_file:
+      - .env
+    expose:
+      - "8000"
+    networks:
+      - internal_net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    user: app
+
+  # Streamlit Frontend
+  streamlit:
+    build: .
+    container_name: cricoptima_ui_prod
+    command: streamlit run app/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+    restart: always
+    depends_on:
+      api:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - API_URL=http://api:8000
+    ports:
+      - "8501:8501"
+    networks:
+      - internal_net
+    user: app
+
+networks:
+  internal_net:
+    driver: bridge
