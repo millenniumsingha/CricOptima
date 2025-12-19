@@ -1,10 +1,9 @@
-"""Streamlit dashboard for CricOptima."""
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import sys
+import requests
 from pathlib import Path
 
 # Add project root to path
@@ -82,6 +81,33 @@ def load_data(match_id: str = None):
     return PlayerPool(players=players), model_loaded
 
 
+API_BASE_URL = f"http://{settings.API_HOST}:{settings.API_PORT}"
+
+def login_user(username, password):
+    """Login user and return token."""
+    try:
+        response = requests.post(
+            f"{API_BASE_URL}/auth/token",
+            data={"username": username, "password": password}
+        )
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except:
+        return None
+
+def register_user(username, password):
+    """Register new user."""
+    try:
+        response = requests.post(
+            f"{API_BASE_URL}/auth/register",
+            json={"username": username, "password": password}
+        )
+        return response.status_code == 200
+    except:
+        return False
+
+
 def main():
     # Header
     st.markdown('<p class="main-header">🏏 CricOptima</p>', unsafe_allow_html=True)
@@ -90,6 +116,40 @@ def main():
     
     # Sidebar Settings
     with st.sidebar:
+        st.header("👤 User Account")
+        
+        # Check session state
+        if 'token' not in st.session_state:
+            auth_tab1, auth_tab2 = st.tabs(["Login", "Register"])
+            
+            with auth_tab1:
+                l_user = st.text_input("Username", key="l_user")
+                l_pass = st.text_input("Password", type="password", key="l_pass")
+                if st.button("Login"):
+                    token_data = login_user(l_user, l_pass)
+                    if token_data:
+                        st.session_state['token'] = token_data['access_token']
+                        st.session_state['username'] = l_user
+                        st.rerun()
+                    else:
+                        st.error("Invalid credentials")
+            
+            with auth_tab2:
+                r_user = st.text_input("Username", key="r_user")
+                r_pass = st.text_input("Password", type="password", key="r_pass")
+                if st.button("Register"):
+                    if register_user(r_user, r_pass):
+                        st.success("Registered! Please login.")
+                    else:
+                        st.error("Registration failed")
+        else:
+            st.success(f"Welcome, {st.session_state['username']}!")
+            if st.button("Logout"):
+                del st.session_state['token']
+                del st.session_state['username']
+                st.rerun()
+        
+        st.markdown("---")
         st.header("⚙️ Settings")
         
         # Match Selection (if Live)
