@@ -69,6 +69,19 @@ class PredictionResponse(BaseModel):
     feature_contributions: Optional[Dict[str, float]] = None
 
 
+from datetime import datetime
+
+class SavedTeamCreate(BaseModel):
+    name: str
+    team_data: dict
+
+class SavedTeamResponse(SavedTeamCreate):
+    id: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
 class HealthResponse(BaseModel):
     """Health check response."""
     status: str = "healthy"
