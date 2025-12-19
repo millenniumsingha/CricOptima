@@ -17,7 +17,7 @@ from api.schemas import (
     OptimizationRequest, OptimizationResponse,
     PredictionResponse, HealthResponse
 )
-from api.routers import auth
+from api.routers import auth, teams
 from src.db import init_db
 
 
@@ -45,6 +45,7 @@ init_db()
 
 # Include Routers
 app.include_router(auth.router)
+app.include_router(teams.router)
 
 # CORS
 app.add_middleware(
