@@ -22,6 +22,8 @@ altair>=5.2.0
 # Database
 sqlalchemy>=2.0.0
 aiosqlite>=0.19.0
+passlib[bcrypt]>=1.7.4
+python-jose[cryptography]>=3.3.0
 
 # Testing
 pytest>=7.4.0
