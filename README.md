@@ -176,10 +176,6 @@ pytest tests/ --cov=src --cov=api
 - [ ] Mobile-responsive design
 - [ ] Historical match simulation
 
-## 📜 License
-
-MIT License
-
 ## 🙏 Acknowledgments
 
 - Original project from Internshala Python Training
