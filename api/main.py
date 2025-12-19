@@ -22,21 +22,14 @@ from api.schemas import (
 app = FastAPI(
     title="CricOptima API",
     description="""
-    🏏 **Fantasy Cricket Optimizer API**
+    🏏 **CricOptima API**
     
-    Build optimal fantasy cricket teams using ML-powered predictions 
-    and constraint optimization.
+    A comprehensive REST API for fantasy cricket team optimization.
     
-    ## Features
-    - Player performance predictions using ML
-    - Optimal team selection within budget constraints
-    - Fantasy points calculation
-    - Team validation
-    
-    ## Quick Start
-    1. Get available players: `GET /players`
-    2. Get predictions: `GET /predictions`
-    3. Build optimal team: `POST /optimize`
+    ## Core Capabilities
+    - **Performance Prediction**: Gradient Boosting regressor for player point forecasting.
+    - **Constraint Optimization**: Knapsack-style algorithm for budget and role validation.
+    - **Team Management**: Endpoints for team generation and validation.
     """,
     version=__version__,
     docs_url="/docs",

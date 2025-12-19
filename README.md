@@ -6,9 +6,9 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.31-red)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue)
 
-**CricOptima** is an advanced, AI-powered fantasy cricket team optimizer. It moves beyond simple heuristics to use Machine Learning (Gradient Boosting) for player performance prediction and mathematical constraint satisfaction for team selection.
+**CricOptima** is an advanced, AI-powered fantasy cricket team optimizer. I designed and built this system to move beyond simple heuristics, implementing **Gradient Boosting** for player performance prediction and mathematical constraint satisfaction for optimal team selection.
 
-🔴 **[LIVE DEMO](https://cricoptima-43y3wvvoj5prwupxqgjxeu.streamlit.app/)** - Try the AI optimizer right now!
+🔴 **[LIVE DEMO](https://cricoptima-43y3wvvoj5prwupxqgjxeu.streamlit.app/)** - Experience the AI optimizer in action!
 
 ---
 

@@ -1,6 +1,6 @@
 # System Architecture
 
-CricOptima follows a **Clean, Modular Architecture** designed for scalability, maintainability, and testability.
+I designed **CricOptima** with a **Clean, Modular Architecture** to ensure scalability, maintainability, and testability. The system is decoupled into three distinct layers, ensuring that business logic remains independent of the delivery mechanism.
 
 ## 🏗️ High-Level Structure
 
