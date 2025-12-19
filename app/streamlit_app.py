@@ -28,49 +28,15 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
-st.markdown("""
-<style>
-    .main-header {
-        font-size: 2.5rem;
-        font-weight: bold;
-        background: linear-gradient(90deg, #1e3a5f 0%, #2e7d32 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-align: center;
-        padding: 1rem;
-        padding-bottom: 0.5rem;
-    }
-    .metric-card {
-        background-color: #f0f2f6;
-        border-radius: 10px;
-        padding: 1rem;
-        text-align: center;
-    }
-    .player-card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 0.5rem;
-        margin: 0.25rem 0;
-    }
-    .captain-badge {
-        background-color: #ffd700;
-        color: black;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: bold;
-    }
-    .vc-badge {
-        background-color: #c0c0c0;
-        color: black;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: bold;
-    }
-</style>
-""", unsafe_allow_html=True)
+# Load Custom CSS
+def load_css(file_path):
+    with open(file_path) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+css_path = Path(__file__).parent / "assets" / "style.css"
+if css_path.exists():
+    load_css(css_path)
+
 
 
 @st.cache_resource
@@ -262,23 +228,24 @@ def main():
         st.header("Available Players")
         
         # Filters
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            role_filter = st.selectbox(
-                "Filter by Role",
-                ["All"] + [r.value for r in PlayerRole]
-            )
-        
-        with col2:
-            teams = sorted(set(p.team for p in player_pool.players))
-            team_filter = st.selectbox("Filter by Team", ["All"] + teams)
-        
-        with col3:
-            sort_by = st.selectbox(
-                "Sort by",
-                ["Predicted Points", "Cost", "Value Score", "Name"]
-            )
+        with st.expander("🔍 Filter & Sort Options", expanded=True):
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                role_filter = st.selectbox(
+                    "Filter by Role",
+                    ["All"] + [r.value for r in PlayerRole]
+                )
+            
+            with col2:
+                teams = sorted(set(p.team for p in player_pool.players))
+                team_filter = st.selectbox("Filter by Team", ["All"] + teams)
+            
+            with col3:
+                sort_by = st.selectbox(
+                    "Sort by",
+                    ["Predicted Points", "Cost", "Value Score", "Name"]
+                )
         
         # Apply filters
         players = player_pool.players
