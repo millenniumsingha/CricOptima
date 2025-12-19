@@ -1,0 +1,20 @@
+# Area Labels
+area/backend:
+  - changed-files:
+    - any-glob-to-any-file: ['src/**', 'api/**']
+
+area/frontend:
+  - changed-files:
+    - any-glob-to-any-file: ['app/**']
+
+area/docs:
+  - changed-files:
+    - any-glob-to-any-file: ['**/*.md', 'docs/**']
+
+area/tests:
+  - changed-files:
+    - any-glob-to-any-file: ['tests/**']
+
+area/devops:
+  - changed-files:
+    - any-glob-to-any-file: ['.github/**', 'Dockerfile', 'docker-compose.yml', 'requirements.txt']
