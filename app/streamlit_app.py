@@ -107,6 +107,45 @@ def register_user(username, password):
     except:
         return False
 
+def save_team_api(token, name, team_data):
+    """Save team to API."""
+    try:
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.post(
+            f"{API_BASE_URL}/teams/",
+            json={"name": name, "team_data": team_data},
+            headers=headers
+        )
+        return response.status_code == 200
+    except:
+        return False
+
+def get_my_teams_api(token):
+    """Get user teams."""
+    try:
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(
+            f"{API_BASE_URL}/teams/",
+            headers=headers
+        )
+        if response.status_code == 200:
+            return response.json()
+        return []
+    except:
+        return []
+
+def delete_team_api(token, team_id):
+    """Delete team."""
+    try:
+        headers = {"Authorization": f"Bearer {token}"}
+        requests.delete(
+            f"{API_BASE_URL}/teams/{team_id}",
+            headers=headers
+        )
+        return True
+    except:
+        return False
+
 
 def main():
     # Header
@@ -188,10 +227,11 @@ def main():
             st.caption("Run: `python -m src.ml.train`")
     
     # Main content - Tabs
-    tab1, tab2, tab3, tab4 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "🎯 Auto-Optimize", 
         "🏃 Player Pool", 
         "📈 Analytics",
+        "📂 My Teams",
         "ℹ️ About"
     ])
     
@@ -282,6 +322,24 @@ def main():
                     labels={"x": "Team", "y": "Players"}
                 )
                 st.plotly_chart(fig_teams, use_container_width=True)
+            
+            # Save Team Button (Authenticated)
+            if 'token' in st.session_state:
+                st.markdown("### 💾 Save Team")
+                if st.button("Save to My Account"):
+                    # Serialize team data
+                    team_json = {
+                        "name": team.name,
+                        "players": [p.id for p in team.players],
+                        "total_cost": result.total_cost,
+                        "predicted_points": result.total_predicted_points
+                    }
+                    if save_team_api(st.session_state['token'], team.name, team_json):
+                        st.success("Team saved to your account!")
+                    else:
+                        st.error("Failed to save team.")
+            else:
+                st.info("💡 Login to save this team to your account.")
     
     # Tab 2: Player Pool
     with tab2:
@@ -382,9 +440,33 @@ def main():
             
             for i, p in enumerate(top_value, 1):
                 st.write(f"{i}. **{p.name}** ({p.role}) - {p.value_score:.3f}")
-    
-    # Tab 4: About
+
+    # Tab 4: My Teams
     with tab4:
+        st.header("📂 My Saved Teams")
+        
+        if 'token' in st.session_state:
+            my_teams = get_my_teams_api(st.session_state['token'])
+            
+            if not my_teams:
+                st.info("No saved teams found.")
+            else:
+                for t in my_teams:
+                    with st.expander(f"{t['name']} (Created: {t['created_at'][:10]})"):
+                        data = t['team_data']
+                        c1, c2, c3 = st.columns(3)
+                        c1.metric("Points", f"{data.get('predicted_points', 0):.1f}")
+                        c2.metric("Cost", f"{data.get('total_cost', 0)}")
+                        
+                        if st.button("Delete Team", key=f"del_{t['id']}"):
+                            if delete_team_api(st.session_state['token'], t['id']):
+                                st.success("Deleted!")
+                                st.rerun()
+        else:
+            st.warning("🔒 Please login to view your saved teams.")
+    
+    # Tab 5: About
+    with tab5:
         st.header("About CricOptima")
         
         st.markdown("""
