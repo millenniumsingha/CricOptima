@@ -3,6 +3,7 @@
     font-size: 2.5rem;
     font-weight: bold;
     background: linear-gradient(90deg, #1e3a5f 0%, #2e7d32 100%);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
@@ -34,6 +35,23 @@
     border-radius: 4px;
     font-size: 0.7rem;
     font-weight: bold;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .main-header {
+        font-size: 1.8rem;
+        padding: 0.5rem;
+    }
+
+    .metric-card {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stDataFrame {
+        font-size: 0.8rem;
+    }
 }
 
 .vc-badge {

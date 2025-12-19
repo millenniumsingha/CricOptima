@@ -228,23 +228,24 @@ def main():
         st.header("Available Players")
         
         # Filters
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            role_filter = st.selectbox(
-                "Filter by Role",
-                ["All"] + [r.value for r in PlayerRole]
-            )
-        
-        with col2:
-            teams = sorted(set(p.team for p in player_pool.players))
-            team_filter = st.selectbox("Filter by Team", ["All"] + teams)
-        
-        with col3:
-            sort_by = st.selectbox(
-                "Sort by",
-                ["Predicted Points", "Cost", "Value Score", "Name"]
-            )
+        with st.expander("🔍 Filter & Sort Options", expanded=True):
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                role_filter = st.selectbox(
+                    "Filter by Role",
+                    ["All"] + [r.value for r in PlayerRole]
+                )
+            
+            with col2:
+                teams = sorted(set(p.team for p in player_pool.players))
+                team_filter = st.selectbox("Filter by Team", ["All"] + teams)
+            
+            with col3:
+                sort_by = st.selectbox(
+                    "Sort by",
+                    ["Predicted Points", "Cost", "Value Score", "Name"]
+                )
         
         # Apply filters
         players = player_pool.players
