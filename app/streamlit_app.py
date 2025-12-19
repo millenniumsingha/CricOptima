@@ -16,7 +16,8 @@ from src.models.team import Team, TeamConstraints
 from src.optimizer.team_builder import TeamOptimizer
 from src.ml.predictor import get_predictor
 from src.ml.train import train_model
-from src.data.sample_data import get_sample_players
+from src.data.mock_provider import MockDataProvider
+from src.data.live_provider import LiveDataProvider
 from src.config import settings
 
 # Page config
@@ -73,9 +74,17 @@ st.markdown("""
 
 
 @st.cache_resource
-def load_data():
+def load_data(match_id: str = None):
     """Load player data and ML model."""
-    players = get_sample_players()
+    if settings.DATA_SOURCE == "live":
+        provider = LiveDataProvider()
+        # Use provided match_id or default
+        mid = match_id or "t20_match_01" 
+        players = provider.get_players(match_id=mid)
+    else:
+        provider = MockDataProvider()
+        players = provider.get_players()
+
     model_loaded = False
     
     # Try to load predictions
@@ -113,16 +122,25 @@ def main():
     st.markdown('<p style="text-align: center; color: #666;">AI-Powered Fantasy Cricket Team Optimizer</p>', unsafe_allow_html=True)
     st.markdown("---")
     
-    # Load data
-    player_pool, model_loaded = load_data()
-    
-    # Sidebar
+    # Sidebar Settings
     with st.sidebar:
         st.header("⚙️ Settings")
         
+        # Match Selection (if Live)
+        selected_match_id = None
+        if settings.DATA_SOURCE == "live":
+            st.info("📡 Live Data Mode")
+            selected_match_id = st.text_input("Match ID", value="t20_match_01", help="Enter CricAPI Match ID")
+        
         # Budget
         budget = st.slider("Budget", 500, 1500, settings.BUDGET_LIMIT, step=50)
-        
+
+    # Load data
+    with st.spinner("Loading data..."):
+        player_pool, model_loaded = load_data(match_id=selected_match_id)
+    
+    # Sidebar Constraints
+    with st.sidebar:
         st.markdown("---")
         st.header("📊 Constraints")
         

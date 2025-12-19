@@ -22,9 +22,12 @@ class Settings(BaseSettings):
     API_PORT: int = 8000
     DEBUG: bool = True
     
-    # Cricket API (optional - for live data)
-    CRICKET_API_KEY: Optional[str] = None
-    CRICKET_API_URL: str = "https://api.cricapi.com/v1"
+    # Data Source (live vs mock)
+    DATA_SOURCE: str = "mock"
+    CRIC_API_KEY: Optional[str] = None
+    
+    # Legacy field - keeping for now if referenced elsewhere, or remove
+    # CRICKET_API_URL: str = "https://api.cricapi.com/v1"
     
     # Fantasy Game Settings
     BUDGET_LIMIT: int = 1000

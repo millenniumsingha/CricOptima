@@ -6,11 +6,12 @@ from typing import List, Optional
 
 from src import __version__
 from src.config import settings
-from src.models.player import PlayerPool
+from src.models.player import PlayerPool, Player
 from src.models.team import Team, TeamConstraints
 from src.optimizer.team_builder import TeamOptimizer
-from src.ml.predictor import get_predictor, PlayerPredictor
-from src.data.sample_data import get_sample_players
+from src.ml.predictor import PlayerPredictor, get_predictor
+from src.data.mock_provider import MockDataProvider
+from src.data.live_provider import LiveDataProvider
 from api.schemas import (
     PlayerResponse, TeamRequest, TeamResponse,
     OptimizationRequest, OptimizationResponse,
@@ -54,7 +55,14 @@ def get_player_pool() -> PlayerPool:
     """Get or initialize player pool."""
     global _player_pool
     if _player_pool is None:
-        players = get_sample_players()
+        if settings.DATA_SOURCE == "live":
+            # TODO: Add endpoint to set match_id context
+            provider = LiveDataProvider()
+            # For now, return empty or default match's players
+            players = provider.get_players() 
+        else:
+            provider = MockDataProvider()
+            players = provider.get_players()
         
         # Add predictions
         try:
