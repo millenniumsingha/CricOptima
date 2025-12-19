@@ -6,7 +6,7 @@ from pathlib import Path
 from datetime import datetime
 
 from src.ml.predictor import PlayerPredictor
-from src.data.sample_data import generate_training_data
+from src.data.mock_provider import generate_training_data
 from src.config import settings
 
 

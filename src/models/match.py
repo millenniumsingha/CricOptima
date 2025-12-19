@@ -13,6 +13,14 @@ class MatchFormat(str, Enum):
     TEST = "TEST"
 
 
+class MatchStatus(str, Enum):
+    """Match status."""
+    UPCOMING = "UPCOMING"
+    LIVE = "LIVE"
+    COMPLETED = "COMPLETED"
+    ABANDONED = "ABANDONED"
+
+
 class PlayerPerformance(BaseModel):
     """Individual player performance in a match."""
     player_id: str
@@ -78,5 +86,6 @@ class Match(BaseModel):
     format: MatchFormat = MatchFormat.T20
     venue: str
     date: datetime
+    status: MatchStatus = MatchStatus.UPCOMING
     team1_players: List[str] = Field(default_factory=list)
     team2_players: List[str] = Field(default_factory=list)

@@ -1,12 +1,12 @@
-"""Sample data for demo and testing."""
-
+from typing import List, Optional, Tuple
 import random
-from typing import List, Tuple
-import numpy as np
+from datetime import datetime
+
+from src.data.base import BaseDataProvider
 from src.models.player import Player, PlayerRole, PlayerStats
+from src.models.match import Match, MatchStatus
 
-
-# Real IPL team names and sample players
+# Real IPL team names for mock data
 IPL_TEAMS = [
     "Mumbai Indians",
     "Chennai Super Kings", 
@@ -64,55 +64,70 @@ SAMPLE_PLAYERS_DATA = [
 ]
 
 
-def get_sample_players() -> List[Player]:
-    """Get sample player pool for demo."""
-    players = []
+class MockDataProvider(BaseDataProvider):
+    """
+    Provides mock data for testing and demo purposes.
+    """
     
-    for i, (name, team_idx, role, cost, avg_runs, avg_wkts, sr, eco) in enumerate(SAMPLE_PLAYERS_DATA):
-        # Generate realistic recent form
-        if role == "BAT" or role == "WK":
-            base_runs = avg_runs
-            recent_runs = [max(0, int(base_runs + random.gauss(0, 15))) for _ in range(5)]
-            recent_wickets = [0] * 5
-        elif role == "BOWL":
-            recent_runs = [random.randint(0, 15) for _ in range(5)]
-            recent_wickets = [max(0, int(avg_wkts + random.gauss(0, 0.8))) for _ in range(5)]
-        else:  # AR
-            recent_runs = [max(0, int(avg_runs + random.gauss(0, 12))) for _ in range(5)]
-            recent_wickets = [max(0, int(avg_wkts + random.gauss(0, 0.6))) for _ in range(5)]
+    def get_players(self, match_id: Optional[str] = None) -> List[Player]:
+        """Get sample player pool."""
+        players = []
         
-        stats = PlayerStats(
-            matches_played=random.randint(30, 150),
-            total_runs=int(avg_runs * random.randint(50, 120)),
-            total_wickets=int(avg_wkts * random.randint(30, 80)) if avg_wkts > 0 else 0,
-            total_catches=random.randint(10, 50),
-            highest_score=int(avg_runs * random.uniform(2, 3.5)),
-            batting_average=avg_runs,
-            bowling_average=25.0 / avg_wkts if avg_wkts > 0 else 0,
-            strike_rate=sr if sr > 0 else random.uniform(120, 145),
-            economy_rate=eco if eco > 0 else 0,
-            recent_runs=recent_runs,
-            recent_wickets=recent_wickets
-        )
+        for i, (name, team_idx, role, cost, avg_runs, avg_wkts, sr, eco) in enumerate(SAMPLE_PLAYERS_DATA):
+            # Generate realistic recent form
+            if role == "BAT" or role == "WK":
+                base_runs = avg_runs
+                recent_runs = [max(0, int(base_runs + random.gauss(0, 15))) for _ in range(5)]
+                recent_wickets = [0] * 5
+            elif role == "BOWL":
+                recent_runs = [random.randint(0, 15) for _ in range(5)]
+                recent_wickets = [max(0, int(avg_wkts + random.gauss(0, 0.8))) for _ in range(5)]
+            else:  # AR
+                recent_runs = [max(0, int(avg_runs + random.gauss(0, 12))) for _ in range(5)]
+                recent_wickets = [max(0, int(avg_wkts + random.gauss(0, 0.6))) for _ in range(5)]
+            
+            stats = PlayerStats(
+                matches_played=random.randint(30, 150),
+                total_runs=int(avg_runs * random.randint(50, 120)),
+                total_wickets=int(avg_wkts * random.randint(30, 80)) if avg_wkts > 0 else 0,
+                total_catches=random.randint(10, 50),
+                highest_score=int(avg_runs * random.uniform(2, 3.5)),
+                batting_average=avg_runs,
+                bowling_average=25.0 / avg_wkts if avg_wkts > 0 else 0,
+                strike_rate=sr if sr > 0 else random.uniform(120, 145),
+                economy_rate=eco if eco > 0 else 0,
+                recent_runs=recent_runs,
+                recent_wickets=recent_wickets
+            )
+            
+            player = Player(
+                id=f"player_{i:03d}",
+                name=name,
+                team=IPL_TEAMS[team_idx],
+                role=PlayerRole(role),
+                cost=cost,
+                stats=stats
+            )
+            players.append(player)
         
-        player = Player(
-            id=f"player_{i:03d}",
-            name=name,
-            team=IPL_TEAMS[team_idx],
-            role=PlayerRole(role),
-            cost=cost,
-            stats=stats
+        return players
+
+    def get_match_info(self, match_id: str) -> Match:
+        """Return a mock match."""
+        return Match(
+            id=match_id or "mock_match_01",
+            team1=IPL_TEAMS[0],
+            team2=IPL_TEAMS[1],
+            date=datetime.now(),
+            venue="Wankhede Stadium, Mumbai",
+            status=MatchStatus.UPCOMING
         )
-        players.append(player)
-    
-    return players
 
 
 def generate_training_data(n_players: int = 200) -> Tuple[List[Player], List[float]]:
     """
     Generate synthetic training data for ML model.
-    
-    Creates realistic player profiles and corresponding fantasy points.
+    Kept here to support src.ml.train.
     """
     players = []
     actual_points = []
