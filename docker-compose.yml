@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend
+  api:
+    build: .
+    container_name: cricoptima-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ml_models:/app/ml_models
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Streamlit Dashboard
+  streamlit:
+    build: .
+    container_name: cricoptima-streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./ml_models:/app/ml_models
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app
+    command: streamlit run app/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+    depends_on:
+      - api
+
+  # Training service (run once)
+  train:
+    build: .
+    container_name: cricoptima-train
+    volumes:
+      - ./ml_models:/app/ml_models
+    environment:
+      - PYTHONPATH=/app
+    command: python -m src.ml.train
+    profiles:
+      - training
