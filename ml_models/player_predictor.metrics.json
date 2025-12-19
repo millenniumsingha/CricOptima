@@ -1,0 +1,21 @@
+{
+  "cv_r2_mean": 0.21998502058231165,
+  "cv_r2_std": 0.17378493111632992,
+  "feature_importance": {
+    "recent_avg_runs": 0.17962016209069914,
+    "recent_avg_wickets": 0.017829858914989526,
+    "career_batting_avg": 0.06474796132932056,
+    "career_bowling_avg": 0.3167046667421555,
+    "strike_rate": 0.06688019680710483,
+    "economy_rate": 0.08981435338715366,
+    "matches_played": 0.09421369114681148,
+    "is_batsman": 0.0011762143237559158,
+    "is_bowler": 0.000367898656861158,
+    "is_all_rounder": 0.027417606049171036,
+    "is_wicket_keeper": 0.002771536483468346,
+    "consistency_score": 0.05899531094700052,
+    "form_trend": 0.07946054312150834
+  },
+  "n_samples": 200,
+  "timestamp": "2025-12-19T13:15:47.028392"
+}
