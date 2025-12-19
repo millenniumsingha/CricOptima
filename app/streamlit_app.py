@@ -15,6 +15,7 @@ from src.models.player import PlayerPool, PlayerRole
 from src.models.team import Team, TeamConstraints
 from src.optimizer.team_builder import TeamOptimizer
 from src.ml.predictor import get_predictor
+from src.ml.train import train_model
 from src.data.sample_data import get_sample_players
 from src.config import settings
 
@@ -37,6 +38,7 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
         text-align: center;
         padding: 1rem;
+        padding-bottom: 0.5rem;
     }
     .metric-card {
         background-color: #f0f2f6;
@@ -74,6 +76,7 @@ st.markdown("""
 def load_data():
     """Load player data and ML model."""
     players = get_sample_players()
+    model_loaded = False
     
     # Try to load predictions
     try:
@@ -82,12 +85,25 @@ def load_data():
         players = predictor.enrich_players_with_predictions(players)
         model_loaded = True
     except FileNotFoundError:
-        model_loaded = False
-        # Set default predictions
+        # Auto-train logic for deployment
+        with st.spinner("🚀 Performing initial setup & training ML model..."):
+            train_model(use_sample_data=True)
+            
+            # Retry loading
+            try:
+                predictor = get_predictor()
+                predictor.load()
+                players = predictor.enrich_players_with_predictions(players)
+                model_loaded = True
+            except Exception as e:
+                st.error(f"Failed to auto-train model: {e}")
+                
+    if not model_loaded:
+        # Fallback if training fails
         for p in players:
             p.predicted_points = p.stats.batting_average + p.stats.recent_avg_wickets * 10
             p.prediction_confidence = 0.5
-    
+            
     return PlayerPool(players=players), model_loaded
 
 
