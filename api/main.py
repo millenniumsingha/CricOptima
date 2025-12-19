@@ -17,6 +17,8 @@ from api.schemas import (
     OptimizationRequest, OptimizationResponse,
     PredictionResponse, HealthResponse
 )
+from api.routers import auth
+from src.db import init_db
 
 
 # Initialize FastAPI
@@ -31,11 +33,18 @@ app = FastAPI(
     - **Performance Prediction**: Gradient Boosting regressor for player point forecasting.
     - **Constraint Optimization**: Knapsack-style algorithm for budget and role validation.
     - **Team Management**: Endpoints for team generation and validation.
+    - **User Authentication**: Secure registration and login.
     """,
     version=__version__,
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+# Initialize Database
+init_db()
+
+# Include Routers
+app.include_router(auth.router)
 
 # CORS
 app.add_middleware(
