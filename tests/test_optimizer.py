@@ -21,7 +21,7 @@ class TestTeamOptimizer:
                 name=f"Batsman {i}",
                 team="Team A" if i < 3 else "Team B",
                 role=PlayerRole.BATSMAN,
-                cost=100 + i * 10,
+                cost=85 + i * 2,  # Reduced cost
                 stats=PlayerStats(batting_average=30 + i * 5),
                 predicted_points=25 + i * 5
             ))
@@ -32,7 +32,7 @@ class TestTeamOptimizer:
                 name=f"Bowler {i}",
                 team="Team A" if i < 2 else "Team B",
                 role=PlayerRole.BOWLER,
-                cost=90 + i * 10,
+                cost=80 + i * 2,  # Reduced cost
                 stats=PlayerStats(),
                 predicted_points=20 + i * 4
             ))
@@ -43,7 +43,7 @@ class TestTeamOptimizer:
                 name=f"All-Rounder {i}",
                 team="Team B",
                 role=PlayerRole.ALL_ROUNDER,
-                cost=110 + i * 15,
+                cost=90 + i * 2,  # Reduced cost
                 stats=PlayerStats(batting_average=25),
                 predicted_points=30 + i * 5
             ))
@@ -54,7 +54,7 @@ class TestTeamOptimizer:
                 name=f"Wicket-Keeper {i}",
                 team="Team A" if i == 0 else "Team B",
                 role=PlayerRole.WICKET_KEEPER,
-                cost=95 + i * 20,
+                cost=85 + i * 2,  # Reduced cost
                 stats=PlayerStats(batting_average=28),
                 predicted_points=22 + i * 8
             ))
