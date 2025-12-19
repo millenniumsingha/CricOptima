@@ -169,3 +169,8 @@ class PlayerPredictor:
         self.model = data["model"]
         self.scaler = data["scaler"]
         self.is_fitted = True
+
+
+def get_predictor() -> PlayerPredictor:
+    """Get predictor instance."""
+    return PlayerPredictor()

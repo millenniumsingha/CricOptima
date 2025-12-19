@@ -64,7 +64,7 @@ class TestOptimizeEndpoint:
     
     def test_optimize_returns_team(self, client):
         response = client.post("/optimize", json={
-            "budget": 1000,
+            "budget": 2000,
             "team_name": "Test XI"
         })
         
