@@ -24,7 +24,11 @@
 
 Build optimal fantasy cricket teams using machine learning predictions and constraint optimization algorithms.
 
-![CricOptima Dashboard](images/fantasy_cricket1.jpg)
+## 📸 Screenshots
+
+| **Home** | **Optimization Results** | **Analytics** |
+|:---:|:---:|:---:|
+| ![Home](images/app_home.png) | ![Results](images/app_results.png) | ![Analytics](images/app_analytics.png) |
 
 ## ✨ Features
 
