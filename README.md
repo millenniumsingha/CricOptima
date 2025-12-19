@@ -1,12 +1,26 @@
 # 🏏 CricOptima
 
-[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-green.svg)](https://fastapi.tiangolo.com)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.31+-red.svg)](https://streamlit.io)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3+-orange.svg)](https://scikit-learn.org)
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cricoptima-43y3wvvoj5prwupxqgjxeu.streamlit.app/)
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.109-green)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.31-red)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)
 
-**AI-Powered Fantasy Cricket Team Optimizer**
+**CricOptima** is an advanced, AI-powered fantasy cricket team optimizer. It moves beyond simple heuristics to use Machine Learning (Gradient Boosting) for player performance prediction and mathematical constraint satisfaction for team selection.
+
+🔴 **[LIVE DEMO](https://cricoptima-43y3wvvoj5prwupxqgjxeu.streamlit.app/)** - Try the AI optimizer right now!
+
+---
+
+## 📚 Documentation
+
+-   **[📖 Deployment Guide](DEPLOYMENT.md)**: How to run this on the web or Docker.
+-   **[🏗️ Architecture](ARCHITECTURE.md)**: Deep dive into the clean, modular design.
+-   **[🤝 Contributing](CONTRIBUTING.md)**: How to join the project.
+
+---
+
+## 🚀 Key Features
 
 Build optimal fantasy cricket teams using machine learning predictions and constraint optimization algorithms.
 
