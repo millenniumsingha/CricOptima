@@ -168,13 +168,22 @@ pytest tests/ --cov=src --cov=api
 | 5-wicket haul | +10 bonus |
 | Catch/Stumping/Run-out | 10 |
 
-## 🚧 Roadmap
+## ✅ Completed Features (v2.0)
 
-- [x] Live cricket data integration (CricAPI)
-- [x] User authentication & team saving
-- [ ] Head-to-head matchup predictions
-- [x] Mobile-responsive design
-- [ ] Historical match simulation
+- [x] **Live Integration**: Real-time player data via CricAPI.
+- [x] **User Auth**: Secure login/signup with JWT & bcrypt.
+- [x] **Team Management**: Save, load, and delete optimized teams.
+- [x] **Comparisons**: Head-to-Head win probability predictions.
+- [x] **Simulation**: Monte Carlo simulation (1000x) for variance analysis.
+- [x] **Mobile First**: Fully responsive UI for all devices.
+- [x] **DevOps**: CI/CD pipeline with strict linting and testing.
+
+## 🚀 Future Roadmap (v3.0)
+
+- [ ] **Advanced Analytics**: Player consistency ratings and ROI analysis.
+- [ ] **Historical Backtesting**: Validate model against past 5 years of matches.
+- [ ] **Leagues**: Create private leagues to compete with friends.
+- [ ] **Live Match Tracking**: Real-time fantasy point updates during games.
 
 ## 🙏 Acknowledgments
 
