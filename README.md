@@ -171,7 +171,7 @@ pytest tests/ --cov=src --cov=api
 ## 🚧 Roadmap
 
 - [x] Live cricket data integration (CricAPI)
-- [ ] User authentication & team saving
+- [x] User authentication & team saving
 - [ ] Head-to-head matchup predictions
 - [x] Mobile-responsive design
 - [ ] Historical match simulation

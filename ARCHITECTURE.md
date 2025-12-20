@@ -40,10 +40,13 @@ This directory works as a standalone Python package.
 -   **`optimizer/`**: The `TeamOptimizer` which uses constraint satisfaction (Greedy/Knapsack-style) to build the best team.
 -   **`ml/`**: Machine Learning components. `FeatureEngineer` transforms raw stats, and `PlayerPredictor` (Gradient Boosting) forecasts performance.
 -   **`data/`**: Data generators and providers. Currently uses synthetic "Sample Data" for demonstration.
+-   **`db.py`**: SQLite database setup and ORM models (`User`, `SavedTeam`).
+-   **`auth.py`**: Authentication utilities (JWT generation, password hashing).
 
 ### `api/` (The Interface)
 A lightweight FastAPI wrapper around the `src` package.
 -   **`main.py`**: Defines endpoints (`/optimize`, `/players`, `/predict`).
+-   **`routers/`**: Modular route handlers (`auth.py`, `teams.py`).
 -   **`schemas.py`**: request/response DTOs (Data Transfer Objects) to keep API contracts separate from internal domain models.
 
 ### `app/` (The Dashboard)
