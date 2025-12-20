@@ -531,8 +531,8 @@ def main():
         df = pd.DataFrame(player_data)
         st.dataframe(df, hide_index=True, use_container_width=True, height=500)
     
-    # Tab 3: Analytics
-    with tab3:
+    # Tab 4: Analytics
+    with tab4:
         st.header("Player Analytics")
         
         # Scatter plot: Cost vs Predicted Points
@@ -571,8 +571,8 @@ def main():
             for i, p in enumerate(top_value, 1):
                 st.write(f"{i}. **{p.name}** ({p.role}) - {p.value_score:.3f}")
 
-    # Tab 4: My Teams
-    with tab4:
+    # Tab 5: My Teams
+    with tab5:
         st.header("📂 My Saved Teams")
         
         if 'token' in st.session_state:
@@ -595,8 +595,8 @@ def main():
         else:
             st.warning("🔒 Please login to view your saved teams.")
     
-    # Tab 5: About
-    with tab5:
+    # Tab 6: About
+    with tab6:
         st.header("About CricOptima")
         
         st.markdown("""
