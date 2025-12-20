@@ -159,6 +159,19 @@ def compare_teams_api(team_a_data, team_b_data):
     except:
         return None
 
+def simulate_match_api(team_a_data, team_b_data, iterations=1000):
+    """Run simulation."""
+    try:
+        response = requests.post(
+            f"{API_BASE_URL}/teams/simulate/",
+            json={"team_a": team_a_data, "team_b": team_b_data, "iterations": iterations}
+        )
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except:
+        return None
+
 
 def main():
     # Header
@@ -414,6 +427,48 @@ def main():
                         st.caption(f"{prob:.1%} chance of winning")
                         
                         st.info(f"Point Difference: {diff:.1f}")
+
+                st.markdown("---")
+                st.subheader("🎲 Monte Carlo Simulation")
+                st.caption("Simulate 1,000 matches considering player point variance.")
+                
+                if st.button("Run Simulation (1000x)"):
+                    with st.spinner("Simulating..."):
+                        sim_result = simulate_match_api(team_a['team_data'], team_b['team_data'])
+                    
+                    if sim_result:
+                        res_a = sim_result['team_a']
+                        res_b = sim_result['team_b']
+                        
+                        # Metrics
+                        m1, m2 = st.columns(2)
+                        m1.metric(f"Win Probability ({res_a['name']})", f"{res_a['win_probability']:.1%}")
+                        m2.metric(f"Win Probability ({res_b['name']})", f"{res_b['win_probability']:.1%}")
+                        
+                        # Histogram
+                        import plotly.figure_factory as ff
+                        
+                        hist_data = [
+                            sim_result['simulation_data']['scores_a'],
+                            sim_result['simulation_data']['scores_b']
+                        ]
+                        group_labels = [res_a['name'], res_b['name']]
+                        
+                        fig_dist = ff.create_distplot(
+                            hist_data, group_labels, bin_size=10, 
+                            show_rug=False, 
+                            colors=['#3b82f6', '#ef4444']
+                        )
+                        fig_dist.update_layout(title_text="Score Distribution (1000 Matches)")
+                        st.plotly_chart(fig_dist, use_container_width=True)
+                        
+                        # Stats Table
+                        st.markdown("### 📊 Detailed Stats")
+                        stats_df = pd.DataFrame([
+                            {"Team": res_a['name'], "Mean": res_a['stats']['mean'], "Min": res_a['stats']['min'], "Max": res_a['stats']['max']},
+                            {"Team": res_b['name'], "Mean": res_b['stats']['mean'], "Min": res_b['stats']['min'], "Max": res_b['stats']['max']}
+                        ])
+                        st.dataframe(stats_df, hide_index=True, use_container_width=True)
 
     
     # Tab 3: Player Pool
