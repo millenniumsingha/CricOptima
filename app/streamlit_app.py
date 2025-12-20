@@ -146,6 +146,19 @@ def delete_team_api(token, team_id):
     except:
         return False
 
+def compare_teams_api(team_a_data, team_b_data):
+    """Compare two teams."""
+    try:
+        response = requests.post(
+            f"{API_BASE_URL}/teams/compare/",
+            json={"team_a": team_a_data, "team_b": team_b_data}
+        )
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except:
+        return None
+
 
 def main():
     # Header
@@ -227,8 +240,9 @@ def main():
             st.caption("Run: `python -m src.ml.train`")
     
     # Main content - Tabs
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "🎯 Auto-Optimize", 
+        "⚔️ Head-to-Head",
         "🏃 Player Pool", 
         "📈 Analytics",
         "📂 My Teams",
@@ -341,8 +355,69 @@ def main():
             else:
                 st.info("💡 Login to save this team to your account.")
     
-    # Tab 2: Player Pool
+    # Tab 2: Head-to-Head
     with tab2:
+        st.header("⚔️ Head-to-Head Comparison")
+        
+        if 'token' not in st.session_state:
+             st.warning("🔒 Please login to use the Head-to-Head feature.")
+        else:
+            my_teams = get_my_teams_api(st.session_state['token'])
+            if not my_teams:
+                st.info("You need to save at least one team to use this feature.")
+            else:
+                c1, c2 = st.columns(2)
+                
+                with c1:
+                    st.subheader("🟦 Your Team")
+                    team_a_idx = st.selectbox(
+                        "Select Team A", 
+                        range(len(my_teams)), 
+                        format_func=lambda i: my_teams[i]['name']
+                    )
+                    team_a = my_teams[team_a_idx]
+                    st.metric("Points", f"{team_a['team_data'].get('predicted_points', 0):.1f}")
+
+                with c2:
+                    st.subheader("🟥 Opponent")
+                    # For now just compare against another saved team or allow same team
+                    team_b_idx = st.selectbox(
+                        "Select Team B", 
+                        range(len(my_teams)), 
+                        format_func=lambda i: my_teams[i]['name'],
+                        key="tb_select"
+                    )
+                    team_b = my_teams[team_b_idx]
+                    st.metric("Points", f"{team_b['team_data'].get('predicted_points', 0):.1f}")
+                
+                if st.button("🥊 Fight!", type="primary", use_container_width=True):
+                    result = compare_teams_api(team_a['team_data'], team_b['team_data'])
+                    
+                    if result:
+                        st.markdown("---")
+                        
+                        # Win Prob
+                        prob = result['win_probability_a']
+                        diff = result['point_diff']
+                        
+                        if prob > 0.5:
+                            st.success(f"🏆 {result['team_a']['name']} Wins!")
+                            st.balloons()
+                        elif prob < 0.5:
+                            st.error(f"💀 {result['team_b']['name']} Wins!")
+                        else:
+                            st.info("🤝 It's a Tie!")
+                        
+                        # Progress bar for probability
+                        st.write(f"**Win Probability ({result['team_a']['name']})**")
+                        st.progress(prob)
+                        st.caption(f"{prob:.1%} chance of winning")
+                        
+                        st.info(f"Point Difference: {diff:.1f}")
+
+    
+    # Tab 3: Player Pool
+    with tab3:
         st.header("Available Players")
         
         # Filters
