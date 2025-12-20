@@ -332,17 +332,28 @@ def main():
         st.markdown("---")
         st.header("⚙️ Settings")
         
-        # Match Selection (if Live)
-        selected_match_id = None
-        if settings.DATA_SOURCE == "live":
-            st.info("📡 Live Data Mode")
+        # Data Source Toggle
+        use_live_data = st.toggle("Use Live Data (CricAPI)", value=False)
+        
+        if use_live_data:
+            settings.DATA_SOURCE = "live"
+            api_key = st.text_input("CricAPI Key", type="password", help="Get free key from cricapi.com")
+            if api_key:
+                settings.CRIC_API_KEY = api_key
+            else:
+                st.warning("⚠️ Please enter API Key")
+            
             selected_match_id = st.text_input("Match ID", value="t20_match_01", help="Enter CricAPI Match ID")
+        else:
+            settings.DATA_SOURCE = "mock"
+            selected_match_id = None
         
         # Budget
         budget = st.slider("Budget", 500, 1500, settings.BUDGET_LIMIT, step=50)
 
     # Load data
     with st.spinner("Loading data..."):
+        # Reload provider if source changed
         player_pool, model_loaded = load_data(match_id=selected_match_id)
     
     # Sidebar Constraints
@@ -364,8 +375,11 @@ def main():
         if model_loaded:
             st.success("✅ ML Model Loaded")
         else:
-            st.warning("⚠️ ML Model not trained")
-            st.caption("Run: `python -m src.ml.train`")
+             if use_live_data and not api_key:
+                st.warning("waiting for key...")
+             else:
+                st.warning("⚠️ ML Model not trained")
+                st.caption("Auto-training...")
     
     # Main content - Tabs
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
