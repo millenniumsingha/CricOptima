@@ -83,14 +83,6 @@ def load_data(match_id: str = None):
 
 API_BASE_URL = f"http://{settings.API_HOST}:{settings.API_PORT}"
 
-from datetime import timedelta
-from src.auth import authenticate_user, create_access_token, get_password_hash
-from src.db import SessionLocal, get_db
-from src.models.user import User as DBUser, SavedTeam as DBSavedTeam
-
-def get_db_session():
-    return SessionLocal()
-
 def login_user(username, password):
     """Login user via API or Direct DB."""
     # Try API first
@@ -106,6 +98,8 @@ def login_user(username, password):
         pass
     
     # Fallback to Direct DB
+    from src.auth import authenticate_user, create_access_token
+    
     db = get_db_session()
     try:
         user = authenticate_user(db, username, password)
@@ -115,6 +109,11 @@ def login_user(username, password):
         return {"access_token": access_token, "token_type": "bearer"}
     finally:
         db.close()
+
+def get_db_session():
+    # Lazy import to avoid startup errors on Cloud (if dependencies missing)
+    from src.db import SessionLocal
+    return SessionLocal()
 
 def register_user(username, password):
     """Register user via API or Direct DB."""
