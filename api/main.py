@@ -17,7 +17,7 @@ from api.schemas import (
     OptimizationRequest, OptimizationResponse,
     PredictionResponse, HealthResponse
 )
-from api.routers import auth, teams, comparison
+from api.routers import auth, teams, comparison, simulation
 from src.db import init_db
 
 
@@ -47,6 +47,7 @@ init_db()
 app.include_router(auth.router)
 app.include_router(teams.router)
 app.include_router(comparison.router)
+app.include_router(simulation.router)
 
 # CORS
 app.add_middleware(
