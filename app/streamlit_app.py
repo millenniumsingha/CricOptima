@@ -163,6 +163,7 @@ def save_team_api(token, name, team_data):
     # Ideally should decode token, but for now assuming direct use
     from jose import jwt, JWTError
     from src.auth import SECRET_KEY, ALGORITHM
+    from src.models.user import User as DBUser, SavedTeam as DBSavedTeam
     
     db = get_db_session()
     try:
@@ -208,6 +209,7 @@ def get_my_teams_api(token):
     # Direct DB
     from jose import jwt
     from src.auth import SECRET_KEY, ALGORITHM
+    from src.models.user import User as DBUser
     import json
     
     db = get_db_session()
@@ -245,6 +247,7 @@ def delete_team_api(token, team_id):
         pass
         
     # Direct DB
+    from src.models.user import SavedTeam as DBSavedTeam
     db = get_db_session()
     try:
         # Simplification: In direct mode we trust the ID belongs to user or verify via join
