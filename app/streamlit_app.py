@@ -83,29 +83,108 @@ def load_data(match_id: str = None):
 
 API_BASE_URL = f"http://{settings.API_HOST}:{settings.API_PORT}"
 
+def get_db_session():
+    # Lazy import to avoid startup errors on Cloud (if dependencies missing)
+    from src.db import SessionLocal
+    return SessionLocal()
+
+def save_team_fallback(token, name, team_data):
+    # Direct DB (simplified, assumes token is valid username for now in fallback)
+    # Ideally should decode token, but for now assuming direct use
+    from jose import jwt, JWTError
+    from src.auth import SECRET_KEY, ALGORITHM
+    from src.models.user import User as DBUser
+    from src.models.user import SavedTeam as DBSavedTeam
+    import json
+    
+    db = get_db_session()
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username = payload.get("sub")
+        if not username: return False
+        
+        user = db.query(DBUser).filter(DBUser.username == username).first()
+        if not user: return False
+        
+        # Check limit
+        if len(user.saved_teams) >= 5: return False # Hard limit for fallback
+        
+        db_team = DBSavedTeam(
+            name=name,
+            team_data=json.dumps(team_data),
+            user_id=user.id
+        )
+        db.add(db_team)
+        db.commit()
+        db.refresh(db_team)
+        return True
+    except JWTError:
+        st.error("Invalid authentication token.")
+        return False
+    except Exception as e:
+        st.error(f"Error saving team to DB: {e}")
+        return False
+    finally:
+        db.close()
+
 def login_user(username, password):
     """Login user and return token."""
+    # Try API first
     try:
         response = requests.post(
             f"{API_BASE_URL}/auth/token",
-            data={"username": username, "password": password}
+            data={"username": username, "password": password},
+            timeout=1
         )
         if response.status_code == 200:
             return response.json()
-        return None
     except:
-        return None
+        pass
+
+    # Fallback to Direct DB
+    from src.auth import authenticate_user, create_access_token
+    
+    db = get_db_session()
+    try:
+        user = authenticate_user(db, username, password)
+        if not user:
+            return None
+        access_token = create_access_token(data={"sub": user.username})
+        return {"access_token": access_token, "token_type": "bearer"}
+    finally:
+        db.close()
 
 def register_user(username, password):
     """Register new user."""
     try:
         response = requests.post(
             f"{API_BASE_URL}/auth/register",
-            json={"username": username, "password": password}
+            json={"username": username, "password": password},
+            timeout=1
         )
         return response.status_code == 200
     except:
+        pass
+        
+    # Fallback to Direct DB
+    from src.auth import get_password_hash
+    from src.models.user import User as DBUser
+    
+    db = get_db_session()
+    try:
+        if db.query(DBUser).filter(DBUser.username == username).first():
+            return False # Already exists
+        
+        hashed_password = get_password_hash(password)
+        db_user = DBUser(username=username, hashed_password=hashed_password)
+        db.add(db_user)
+        db.commit()
+        return True
+    except Exception as e:
+        print(f"Direct register failed: {e}")
         return False
+    finally:
+        db.close()
 
 def save_team_api(token, name, team_data):
     """Save team to API."""
@@ -114,11 +193,15 @@ def save_team_api(token, name, team_data):
         response = requests.post(
             f"{API_BASE_URL}/teams/",
             json={"name": name, "team_data": team_data},
-            headers=headers
+            headers=headers,
+            timeout=1
         )
         return response.status_code == 200
     except:
-        return False
+        pass
+        
+    # Fallback
+    return save_team_fallback(token, name, team_data)
 
 def get_my_teams_api(token):
     """Get user teams."""
