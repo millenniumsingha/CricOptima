@@ -15,7 +15,7 @@ def test_simulation_api():
     
     response = client.post(
         "/teams/simulate/",
-        json={"team_a": team_a, "team_b": team_b, "iterations": 100}
+        json={"team_a": team_a, "team_b": team_b, "iterations": 1000}
     )
     
     assert response.status_code == 200
@@ -32,8 +32,8 @@ def test_simulation_api():
     assert "std_dev" in stats_a
     
     # Check iterations
-    assert len(data["simulation_data"]["scores_a"]) == 100
-    assert data["simulation_data"]["iterations"] == 100
+    assert len(data["simulation_data"]["scores_a"]) == 1000
+    assert data["simulation_data"]["iterations"] == 1000
     
     # Check win prob (A should verify win most times given 100pt diff)
     assert data["team_a"]["win_probability"] > 0.6
