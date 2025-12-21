@@ -130,6 +130,8 @@ def register_user(username, password):
         
     # Fallback to Direct DB
     db = get_db_session()
+    from src.models.user import User as DBUser
+    from src.auth import get_password_hash
     try:
         if db.query(DBUser).filter(DBUser.username == username).first():
             return False # Already exists
