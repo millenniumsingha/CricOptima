@@ -348,9 +348,7 @@ def main():
                 # Fetch matches button
                 if st.button("🔄 Fetch Current Matches"):
                     from src.data.live_provider import LiveDataProvider
-                    import os
-                    os.environ["CRIC_API_KEY"] = api_key
-                    provider = LiveDataProvider()
+                    provider = LiveDataProvider(api_key=api_key)
                     matches = provider.get_current_matches()
                     if matches:
                         st.session_state['available_matches'] = matches
