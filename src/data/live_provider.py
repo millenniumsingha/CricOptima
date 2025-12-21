@@ -36,6 +36,34 @@ class LiveDataProvider(BaseDataProvider):
             print(f"Error fetching data from {endpoint}: {e}")
             return {"status": "failure", "data": []}
 
+    def get_current_matches(self) -> List[Dict[str, Any]]:
+        """
+        Fetch list of current/upcoming matches from CricAPI.
+        Returns list of match dicts with 'id' and 'name' fields.
+        """
+        data = self._make_request("currentMatches")
+        
+        if data.get("status") != "success":
+            return []
+        
+        matches = []
+        for match in data.get("data", []):
+            match_id = match.get("id")
+            team1 = match.get("teamInfo", [{}])[0].get("name", "Team A") if match.get("teamInfo") else "Team A"
+            team2 = match.get("teamInfo", [{}])[1].get("name", "Team B") if len(match.get("teamInfo", [])) > 1 else "Team B"
+            match_type = match.get("matchType", "")
+            status = match.get("status", "")
+            
+            if match_id:
+                matches.append({
+                    "id": match_id,
+                    "name": f"{team1} vs {team2}",
+                    "type": match_type,
+                    "status": status
+                })
+        
+        return matches
+
     def get_players(self, match_id: Optional[str] = None) -> List[Player]:
         """
         Fetch players for a live match.
