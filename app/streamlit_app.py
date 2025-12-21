@@ -669,23 +669,25 @@ def main():
         st.header("Player Analytics")
         
         # Scatter plot: Cost vs Predicted Points
-        # Scatter plot: Cost vs Predicted Points
-        plot_data = pd.DataFrame([{
-            "Cost": p.cost,
-            "Predicted Points": p.predicted_points or 0,
-            "Role": p.role,
-            "Name": p.name
-        } for p in player_pool.players])
-        
-        fig_scatter = px.scatter(
-            plot_data,
-            x="Cost",
-            y="Predicted Points",
-            color="Role",
-            hover_name="Name",
-            title="Cost vs Predicted Points by Role"
-        )
-        st.plotly_chart(fig_scatter, use_container_width=True)
+        if player_pool.players:
+            plot_data = pd.DataFrame([{
+                "Cost": p.cost,
+                "Predicted Points": p.predicted_points or 0,
+                "Role": p.role,
+                "Name": p.name
+            } for p in player_pool.players])
+            
+            fig_scatter = px.scatter(
+                plot_data,
+                x="Cost",
+                y="Predicted Points",
+                color="Role",
+                hover_name="Name",
+                title="Cost vs Predicted Points by Role"
+            )
+            st.plotly_chart(fig_scatter, use_container_width=True)
+        else:
+            st.warning("No player data available for analytics. Please check your data source.")
         
         # Top performers
         col1, col2 = st.columns(2)
