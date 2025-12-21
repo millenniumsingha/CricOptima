@@ -130,7 +130,7 @@ def register_user(username, password):
         
     # Fallback to Direct DB
     db = get_db_session()
-    from src.models.user import User as DBUser
+    from src.db import User as DBUser
     from src.auth import get_password_hash
     try:
         if db.query(DBUser).filter(DBUser.username == username).first():
@@ -165,7 +165,7 @@ def save_team_api(token, name, team_data):
     # Ideally should decode token, but for now assuming direct use
     from jose import jwt, JWTError
     from src.auth import SECRET_KEY, ALGORITHM
-    from src.models.user import User as DBUser, SavedTeam as DBSavedTeam
+    from src.db import User as DBUser, SavedTeam as DBSavedTeam
     
     db = get_db_session()
     try:
@@ -211,7 +211,7 @@ def get_my_teams_api(token):
     # Direct DB
     from jose import jwt
     from src.auth import SECRET_KEY, ALGORITHM
-    from src.models.user import User as DBUser
+    from src.db import User as DBUser
     import json
     
     db = get_db_session()
@@ -249,7 +249,7 @@ def delete_team_api(token, team_id):
         pass
         
     # Direct DB
-    from src.models.user import SavedTeam as DBSavedTeam
+    from src.db import SavedTeam as DBSavedTeam
     db = get_db_session()
     try:
         # Simplification: In direct mode we trust the ID belongs to user or verify via join
@@ -669,13 +669,21 @@ def main():
         st.header("Player Analytics")
         
         # Scatter plot: Cost vs Predicted Points
+        # Scatter plot: Cost vs Predicted Points
+        plot_data = pd.DataFrame([{
+            "Cost": p.cost,
+            "Predicted Points": p.predicted_points or 0,
+            "Role": p.role,
+            "Name": p.name
+        } for p in player_pool.players])
+        
         fig_scatter = px.scatter(
-            x=[p.cost for p in player_pool.players],
-            y=[p.predicted_points or 0 for p in player_pool.players],
-            color=[p.role for p in player_pool.players],
-            hover_name=[p.name for p in player_pool.players],
-            title="Cost vs Predicted Points by Role",
-            labels={"x": "Cost", "y": "Predicted Points", "color": "Role"}
+            plot_data,
+            x="Cost",
+            y="Predicted Points",
+            color="Role",
+            hover_name="Name",
+            title="Cost vs Predicted Points by Role"
         )
         st.plotly_chart(fig_scatter, use_container_width=True)
         
