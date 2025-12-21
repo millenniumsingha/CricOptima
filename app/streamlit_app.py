@@ -130,7 +130,7 @@ def register_user(username, password):
         
     # Fallback to Direct DB
     db = get_db_session()
-    from src.models.user import User as DBUser
+    from src.db import User as DBUser
     from src.auth import get_password_hash
     try:
         if db.query(DBUser).filter(DBUser.username == username).first():
@@ -165,7 +165,7 @@ def save_team_api(token, name, team_data):
     # Ideally should decode token, but for now assuming direct use
     from jose import jwt, JWTError
     from src.auth import SECRET_KEY, ALGORITHM
-    from src.models.user import User as DBUser, SavedTeam as DBSavedTeam
+    from src.db import User as DBUser, SavedTeam as DBSavedTeam
     
     db = get_db_session()
     try:
@@ -211,7 +211,7 @@ def get_my_teams_api(token):
     # Direct DB
     from jose import jwt
     from src.auth import SECRET_KEY, ALGORITHM
-    from src.models.user import User as DBUser
+    from src.db import User as DBUser
     import json
     
     db = get_db_session()
@@ -249,7 +249,7 @@ def delete_team_api(token, team_id):
         pass
         
     # Direct DB
-    from src.models.user import SavedTeam as DBSavedTeam
+    from src.db import SavedTeam as DBSavedTeam
     db = get_db_session()
     try:
         # Simplification: In direct mode we trust the ID belongs to user or verify via join
