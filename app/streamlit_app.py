@@ -465,23 +465,38 @@ def main():
             
             with col1:
                 role_counts = team.role_counts
-                fig_roles = px.pie(
-                    values=list(role_counts.values()),
-                    names=list(role_counts.keys()),
-                    title="Role Distribution",
-                    color_discrete_sequence=px.colors.qualitative.Set2
-                )
-                st.plotly_chart(fig_roles, use_container_width=True)
+                if role_counts:
+                    role_df = pd.DataFrame({
+                        "Role": list(role_counts.keys()),
+                        "Count": list(role_counts.values())
+                    })
+                    fig_roles = px.pie(
+                        role_df,
+                        values="Count",
+                        names="Role",
+                        title="Role Distribution",
+                        color_discrete_sequence=px.colors.qualitative.Set2
+                    )
+                    st.plotly_chart(fig_roles, use_container_width=True)
+                else:
+                    st.info("No role data available")
             
             with col2:
                 team_counts = team.team_counts
-                fig_teams = px.bar(
-                    x=list(team_counts.keys()),
-                    y=list(team_counts.values()),
-                    title="Team Distribution",
-                    labels={"x": "Team", "y": "Players"}
-                )
-                st.plotly_chart(fig_teams, use_container_width=True)
+                if team_counts:
+                    team_df = pd.DataFrame({
+                        "Team": list(team_counts.keys()),
+                        "Players": list(team_counts.values())
+                    })
+                    fig_teams = px.bar(
+                        team_df,
+                        x="Team",
+                        y="Players",
+                        title="Team Distribution"
+                    )
+                    st.plotly_chart(fig_teams, use_container_width=True)
+                else:
+                    st.info("No team data available")
             
             # Save Team Button (Authenticated)
             if 'token' in st.session_state:
