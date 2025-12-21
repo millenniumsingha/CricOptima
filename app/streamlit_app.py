@@ -344,10 +344,36 @@ def main():
             api_key = st.text_input("CricAPI Key", type="password", help="Get free key from cricapi.com")
             if api_key:
                 settings.CRIC_API_KEY = api_key
+                
+                # Fetch matches button
+                if st.button("🔄 Fetch Current Matches"):
+                    from src.data.live_provider import LiveDataProvider
+                    import os
+                    os.environ["CRIC_API_KEY"] = api_key
+                    provider = LiveDataProvider()
+                    matches = provider.get_current_matches()
+                    if matches:
+                        st.session_state['available_matches'] = matches
+                        st.success(f"Found {len(matches)} matches!")
+                    else:
+                        st.warning("No matches found. Check API key or try again.")
+                
+                # Match selector
+                if 'available_matches' in st.session_state and st.session_state['available_matches']:
+                    matches = st.session_state['available_matches']
+                    match_options = {f"{m['name']} ({m['type']})": m['id'] for m in matches}
+                    selected_match_name = st.selectbox(
+                        "Select Match",
+                        options=list(match_options.keys()),
+                        help="Select a match to load players from"
+                    )
+                    selected_match_id = match_options.get(selected_match_name)
+                else:
+                    st.info("👆 Click 'Fetch Current Matches' to see available matches")
+                    selected_match_id = None
             else:
                 st.warning("⚠️ Please enter API Key")
-            
-            selected_match_id = st.text_input("Match ID", value="t20_match_01", help="Enter CricAPI Match ID")
+                selected_match_id = None
         else:
             settings.DATA_SOURCE = "mock"
             selected_match_id = None
