@@ -16,7 +16,7 @@ class LiveDataProvider(BaseDataProvider):
     
     BASE_URL = "https://api.cricapi.com/v1"
     
-    def __init__(self, api_key: str = None):
+    def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv("CRIC_API_KEY")
         if not self.api_key:
             print("⚠️ CRIC_API_KEY not found. Live data may fail.")
