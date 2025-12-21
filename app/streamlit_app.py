@@ -347,14 +347,17 @@ def main():
                 
                 # Fetch matches button
                 if st.button("🔄 Fetch Current Matches"):
-                    from src.data.live_provider import LiveDataProvider
-                    provider = LiveDataProvider(api_key=api_key)
-                    matches = provider.get_current_matches()
-                    if matches:
-                        st.session_state['available_matches'] = matches
-                        st.success(f"Found {len(matches)} matches!")
-                    else:
-                        st.warning("No matches found. Check API key or try again.")
+                    try:
+                        from src.data.live_provider import LiveDataProvider
+                        provider = LiveDataProvider(api_key=api_key)
+                        matches = provider.get_current_matches()
+                        if matches:
+                            st.session_state['available_matches'] = matches
+                            st.success(f"Found {len(matches)} matches!")
+                        else:
+                            st.warning("No matches found. Check API key or try again.")
+                    except Exception as e:
+                        st.error(f"Error fetching matches: {str(e)}")
                 
                 # Match selector
                 if 'available_matches' in st.session_state and st.session_state['available_matches']:
