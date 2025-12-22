@@ -340,6 +340,7 @@ def main():
         use_live_data = st.toggle("Use Live Data (CricAPI)", value=False)
         
         if use_live_data:
+            st.info("⚠️ **Demo Mode Active**: Player stats are simulated because the free API tier does not provide historical data. Names and Roles are real.")
             settings.DATA_SOURCE = "live"
             api_key = st.text_input("CricAPI Key", type="password", help="Get free key from cricapi.com")
             if api_key:
