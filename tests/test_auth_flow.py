@@ -15,7 +15,8 @@ def setup_db():
 
 def test_auth_and_team_flow(setup_db):
     # 1. Register
-    username = "integration_test_user"
+    import uuid
+    username = f"integration_test_user_{uuid.uuid4().hex[:8]}"
     password = "securepassword"
     
     # Try login first (should fail)
