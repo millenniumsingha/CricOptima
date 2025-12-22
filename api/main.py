@@ -11,7 +11,7 @@ from src.models.team import Team, TeamConstraints
 from src.optimizer.team_builder import TeamOptimizer
 from src.ml.predictor import PlayerPredictor, get_predictor
 from src.data.mock_provider import MockDataProvider
-from src.data.live_provider import LiveDataProvider
+from src.data.cric_data_provider_v2 import LiveDataProvider
 from api.schemas import (
     PlayerResponse, TeamRequest, TeamResponse,
     OptimizationRequest, OptimizationResponse,

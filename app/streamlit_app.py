@@ -16,7 +16,7 @@ from src.optimizer.team_builder import TeamOptimizer
 from src.ml.predictor import get_predictor
 from src.ml.train import train_model
 from src.data.mock_provider import MockDataProvider
-from src.data.live_provider import LiveDataProvider
+from src.data.cric_data_provider_v2 import LiveDataProvider
 from src.config import settings
 
 # Page config
