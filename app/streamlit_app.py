@@ -349,7 +349,10 @@ def main():
                 if st.button("🔄 Fetch Current Matches"):
                     try:
                         from src.data.live_provider import LiveDataProvider
-                        provider = LiveDataProvider(api_key=api_key)
+                        import os
+                        os.environ["CRIC_API_KEY"] = api_key
+                        # Use no-arg constructor which works for both old (no args) and new (optional args) versions
+                        provider = LiveDataProvider()
                         matches = provider.get_current_matches()
                         if matches:
                             st.session_state['available_matches'] = matches
