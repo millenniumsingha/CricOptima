@@ -141,12 +141,26 @@ class LiveDataProvider(BaseDataProvider):
                     recent_runs=recent_form # Using recent_runs field for form
                 )
                 
+                # Calculate plausible cost based on stats (80 to 120 range)
+                # Better stats = Higher cost
+                base_cost = 80
+                performance_bonus = 0
+                
+                if bat_avg > 40: performance_bonus += 15
+                elif bat_avg > 30: performance_bonus += 10
+                
+                if bowl_avg > 0 and bowl_avg < 25: performance_bonus += 15
+                elif bowl_avg > 0 and bowl_avg < 30: performance_bonus += 10
+                
+                # Add some random variation
+                final_cost = base_cost + performance_bonus + random.randint(0, 15)
+                
                 player = Player(
                     id=p_data.get("id"),
                     name=p_data.get("name"),
                     team=team_name,
                     role=role,
-                    cost=100, 
+                    cost=final_cost, 
                     stats=stats
                 )
                 players.append(player)
