@@ -17,7 +17,9 @@ from src.ml.predictor import get_predictor
 from src.ml.train import train_model
 from src.data.mock_provider import MockDataProvider
 from src.data.cric_data_provider_v2 import LiveDataProvider
+from src.data.cric_data_provider_v2 import LiveDataProvider
 from src.config import settings
+from src.db import init_db
 
 # Page config
 st.set_page_config(
@@ -49,6 +51,9 @@ def load_data(match_id: str = None):
     else:
         provider = MockDataProvider()
         players = provider.get_players()
+
+    # Ensure DB is initialized
+    init_db()
 
     model_loaded = False
     
