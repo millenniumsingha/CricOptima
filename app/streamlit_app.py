@@ -124,7 +124,15 @@ def register_user(username, password):
             json={"username": username, "password": password},
             timeout=1
         )
-        return response.status_code == 200
+        if response.status_code == 200:
+            return True, "Registered successfully!"
+        
+        # Parse error message
+        try:
+            detail = response.json().get("detail", "Registration failed")
+            return False, detail
+        except:
+            return False, f"Registration failed (Status: {response.status_code})"
     except:
         pass
         
@@ -134,16 +142,16 @@ def register_user(username, password):
     from src.auth import get_password_hash
     try:
         if db.query(DBUser).filter(DBUser.username == username).first():
-            return False # Already exists
+            return False, "Username already registered" # Already exists
         
         hashed_password = get_password_hash(password)
         db_user = DBUser(username=username, hashed_password=hashed_password)
         db.add(db_user)
         db.commit()
-        return True
+        return True, "Registered successfully!"
     except Exception as e:
         print(f"Direct register failed: {e}")
-        return False
+        return False, f"Registration failed: {str(e)}"
     finally:
         db.close()
 
@@ -322,10 +330,11 @@ def main():
                 r_user = st.text_input("Username", key="r_user")
                 r_pass = st.text_input("Password", type="password", key="r_pass")
                 if st.button("Register"):
-                    if register_user(r_user, r_pass):
-                        st.success("Registered! Please login.")
+                    success, msg = register_user(r_user, r_pass)
+                    if success:
+                        st.success(f"{msg} Please login.")
                     else:
-                        st.error("Registration failed")
+                        st.error(msg)
         else:
             st.success(f"Welcome, {st.session_state['username']}!")
             if st.button("Logout"):
