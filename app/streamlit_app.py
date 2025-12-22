@@ -349,6 +349,12 @@ def main():
                 if st.button("🔄 Fetch Current Matches"):
                     try:
                         from src.data.live_provider import LiveDataProvider
+                        import inspect
+                        import src.data.live_provider
+                        st.error(f"DEBUG: LiveDataProvider file: {inspect.getfile(LiveDataProvider)}")
+                        st.error(f"DEBUG: Module file: {src.data.live_provider.__file__}")
+                        st.error(f"DEBUG: Available attributes: {dir(LiveDataProvider)}")
+
                         import os
                         os.environ["CRIC_API_KEY"] = api_key
                         # Use no-arg constructor which works for both old (no args) and new (optional args) versions
