@@ -29,6 +29,11 @@ def test_auth_and_team_flow(setup_db):
     data = response.json()
     assert "access_token" in data
     token = data["access_token"]
+
+    # 1b. Try Registering same user again (should fail)
+    response = client.post("/auth/register", json={"username": username, "password": password})
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Username already registered"
     
     # 2. Login
     response = client.post("/auth/token", data={"username": username, "password": password})
