@@ -13,6 +13,7 @@ class LiveDataProvider(BaseDataProvider):
     Fetches real-time cricket data from CricAPI.
     Requires CRIC_API_KEY in environment variables.
     """
+    # Version: 2.0.1 - Force redeploy with api_key param
     
     BASE_URL = "https://api.cricapi.com/v1"
     
