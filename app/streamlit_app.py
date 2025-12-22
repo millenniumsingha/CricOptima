@@ -16,7 +16,7 @@ from src.optimizer.team_builder import TeamOptimizer
 from src.ml.predictor import get_predictor
 from src.ml.train import train_model
 from src.data.mock_provider import MockDataProvider
-from src.data.live_provider import LiveDataProvider
+from src.data.cric_data_provider_v2 import LiveDataProvider
 from src.config import settings
 
 # Page config
@@ -348,18 +348,15 @@ def main():
                 # Fetch matches button
                 if st.button("🔄 Fetch Current Matches"):
                     try:
-                        from src.data.live_provider import LiveDataProvider
-                        import inspect
-                        import src.data.live_provider
-                        st.error(f"DEBUG: LiveDataProvider file: {inspect.getfile(LiveDataProvider)}")
-                        st.error(f"DEBUG: Module file: {src.data.live_provider.__file__}")
-                        st.error(f"DEBUG: Available attributes: {dir(LiveDataProvider)}")
-
+                        # Version 2.1.0: Using new provider file to bypass caching issues
+                        from src.data.cric_data_provider_v2 import LiveDataProvider
+                        
                         import os
                         os.environ["CRIC_API_KEY"] = api_key
-                        # Use no-arg constructor which works for both old (no args) and new (optional args) versions
+                        
                         provider = LiveDataProvider()
                         matches = provider.get_current_matches()
+                        
                         if matches:
                             st.session_state['available_matches'] = matches
                             st.success(f"Found {len(matches)} matches!")

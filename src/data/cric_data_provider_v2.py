@@ -13,7 +13,7 @@ class LiveDataProvider(BaseDataProvider):
     Fetches real-time cricket data from CricAPI.
     Requires CRIC_API_KEY in environment variables.
     """
-    # Version: 2.0.1 - Force redeploy with api_key param
+    # Version: 2.1.0 - V2 Provider to force fresh load
     
     BASE_URL = "https://api.cricapi.com/v1"
     
@@ -84,19 +84,12 @@ class LiveDataProvider(BaseDataProvider):
         players = []
         
         # Parse squads
-        # Note: API response structure depends on the specific provider.
-        # This is a generic implementation for CricAPI's 'squad' endpoint.
-        
-        # For demonstration, we'll iterate through the teams provided in squads
         squads = data.get("data", [])
         for squad in squads:
             team_name = squad.get("teamName", "Unknown Team")
             team_players = squad.get("players", [])
             
             for p_data in team_players:
-                # API doesn't always provide full stats, so we might need to fetch individual player info
-                # or infer/mock some stats if they are missing.
-                
                 # Determining role safely
                 role_str = p_data.get("role", "batting").lower()
                 if "wike" in role_str or "keep" in role_str:
@@ -108,14 +101,9 @@ class LiveDataProvider(BaseDataProvider):
                 else:
                     role = PlayerRole.BATSMAN
                     
-                # We need to fetch detailed stats if not present
-                # For MVP, we might initialize with minimal stats
-                
                 stats = PlayerStats(
                     matches_played=0,
                     batting_average=0.0,
-                    # We can fetch detailed stats in a separate call if needed
-                    # or leave them 0 to be filled by the ML predictor features
                 )
                 
                 player = Player(
@@ -123,7 +111,7 @@ class LiveDataProvider(BaseDataProvider):
                     name=p_data.get("name"),
                     team=team_name,
                     role=role,
-                    cost=100, # Placeholder cost, would need a pricing algorithm
+                    cost=100, 
                     stats=stats
                 )
                 players.append(player)
@@ -161,8 +149,8 @@ class LiveDataProvider(BaseDataProvider):
             id=info.get("id", match_id),
             team1=info.get("team1", "Team A"),
             team2=info.get("team2", "Team B"),
-            date=datetime.now(), # API returns string date, needs parsing
+            date=datetime.now(),
             venue=info.get("venue", "Unknown Venue"),
             status=status,
-            format=MatchFormat.T20 # Default or parse from info
+            format=MatchFormat.T20 
         )
