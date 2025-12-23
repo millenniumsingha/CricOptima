@@ -170,7 +170,9 @@ def save_team_api(token, name, team_data):
             headers=headers,
             timeout=1
         )
-        return response.status_code == 200
+        if response.status_code == 200:
+            return True, "Saved via API"
+        return False, f"API Error: {response.status_code}"
     except:
         pass
 
@@ -182,15 +184,19 @@ def save_team_api(token, name, team_data):
     
     db = get_db_session()
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
-        if not username: return False
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+        except Exception as e:
+             return False, f"Token decode failed: {e}"
+
+        if not username: return False, "Invalid token: no username"
         
         user = db.query(DBUser).filter(DBUser.username == username).first()
-        if not user: return False
+        if not user: return False, "User not found"
         
         # Check limit
-        if len(user.saved_teams) >= 5: return False # Hard limit for fallback
+        if len(user.teams) >= 5: return False, "Team limit reached (Max 5)" # Hard limit for fallback
         
         import json
         db_team = DBSavedTeam(
@@ -200,10 +206,10 @@ def save_team_api(token, name, team_data):
         )
         db.add(db_team)
         db.commit()
-        return True
+        return True, "Saved successfully"
     except Exception as e:
         print(f"Direct save failed: {e}")
-        return False
+        return False, f"Direct save error: {str(e)}"
     finally:
         db.close()
 
@@ -241,7 +247,7 @@ def get_my_teams_api(token):
                 "team_data": t.team_data,
                 "created_at": t.created_at.isoformat()
             }
-            for t in user.saved_teams
+            for t in user.teams
         ]
     except:
         return []
@@ -557,10 +563,11 @@ def main():
                         "total_cost": result.total_cost,
                         "predicted_points": result.total_predicted_points
                     }
-                    if save_team_api(st.session_state['token'], team.name, team_json):
+                    success, msg = save_team_api(st.session_state['token'], team.name, team_json)
+                    if success:
                         st.success("Team saved to your account!")
                     else:
-                        st.error("Failed to save team.")
+                        st.error(f"Failed to save team: {msg}")
             else:
                 st.info("💡 Login to save this team to your account.")
     
