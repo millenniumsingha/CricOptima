@@ -294,8 +294,15 @@ def compare_teams_api(team_a_data, team_b_data):
         if response.status_code == 200:
             return response.json()
         return None
-    except:
-        return None
+    except Exception as e:
+        # Local Fallback
+        try:
+            from src.scoring.comparator import TeamComparator
+            comparator = TeamComparator()
+            return comparator.compare_teams(team_a_data, team_b_data)
+        except Exception as e2:
+            print(f"Comparison failed: {e}, Fallback failed: {e2}")
+            return None
 
 def simulate_match_api(team_a_data, team_b_data, iterations=1000):
     """Run simulation."""
@@ -307,8 +314,15 @@ def simulate_match_api(team_a_data, team_b_data, iterations=1000):
         if response.status_code == 200:
             return response.json()
         return None
-    except:
-        return None
+    except Exception as e:
+        # Local Fallback
+        try:
+            from src.scoring.simulator import MatchSimulator
+            simulator = MatchSimulator(iterations=iterations)
+            return simulator.simulate_match(team_a_data, team_b_data)
+        except Exception as e2:
+            print(f"Simulation failed: {e}, Fallback failed: {e2}")
+            return None
 
 
 def main():
