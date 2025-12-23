@@ -195,7 +195,7 @@ def save_team_api(token, name, team_data):
         import json
         db_team = DBSavedTeam(
             name=name,
-            team_data=json.dumps(team_data),
+            team_data=team_data,
             user_id=user.id
         )
         db.add(db_team)
@@ -238,7 +238,7 @@ def get_my_teams_api(token):
             {
                 "id": t.id,
                 "name": t.name,
-                "team_data": json.loads(t.team_data),
+                "team_data": t.team_data,
                 "created_at": t.created_at.isoformat()
             }
             for t in user.saved_teams
