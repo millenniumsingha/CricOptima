@@ -140,8 +140,7 @@ CricOptima/
 ├── api/                 # FastAPI backend
 ├── app/                 # Streamlit dashboard
 ├── tests/               # Test suite
-├── ml_models/           # Trained models
-└── legacy/              # Original project files
+└── ml_models/           # Trained models
 ```
 
 ## 🧪 Testing
@@ -168,22 +167,27 @@ pytest tests/ --cov=src --cov=api
 | 5-wicket haul | +10 bonus |
 | Catch/Stumping/Run-out | 10 |
 
-## ✅ Completed Features (v2.0)
+## ✨ What's New in v2.0
 
-- [x] **Live Integration**: Real-time player data via CricAPI.
-- [x] **User Auth**: Secure login/signup with JWT & bcrypt.
-- [x] **Team Management**: Save, load, and delete optimized teams.
-- [x] **Comparisons**: Head-to-Head win probability predictions.
-- [x] **Simulation**: Monte Carlo simulation (1000x) for variance analysis.
-- [x] **Mobile First**: Fully responsive UI for all devices.
-- [x] **DevOps**: CI/CD pipeline with strict linting and testing.
+- **🔌 Live Integration**: Real-time player data fetching via CricAPI.
+- **🔐 User Auth**: Secure JWT-based authentication with bcrypt hashing.
+- **💾 Team Management**: Save, load, and manage your optimized teams.
+- **⚖️ Smart Comparison**: Head-to-Head win probability predictions.
+- **🎲 Monte Carlo Simulation**: 1000x match simulation for variance analysis.
+- **📱 Mobile First**: Fully responsive Streamlit UI for all devices.
+- **🚀 DevOps Ready**: CI/CD pipeline with GitHub Actions.
 
-## 🚀 Future Roadmap (v3.0)
+## 🗺️ Roadmap (v3.0 & Beyond)
 
-- [ ] **Advanced Analytics**: Player consistency ratings and ROI analysis.
-- [ ] **Historical Backtesting**: Validate model against past 5 years of matches.
-- [ ] **Leagues**: Create private leagues to compete with friends.
-- [ ] **Live Match Tracking**: Real-time fantasy point updates during games.
+### Phase 1: Advanced Analytics (Q1 2026)
+- [ ] **Player Consistency Ratings**: New metric based on coefficient of variation.
+- [ ] **ROI Analysis**: Cost vs. Points historical trend analysis.
+- [ ] **Venue Impact**: Adjust predictions based on pitch conditions.
+
+### Phase 2: Social & Real-time (Q2 2026)
+- [ ] **Private Leagues**: Compete with friends in custom leaderboards.
+- [ ] **Live Tracking**: Real-time point updates via WebSocket during matches.
+- [ ] **Historical Backtesting**: Validate model against past 5 years of IPL data.
 
 ## 🙏 Acknowledgments
 
