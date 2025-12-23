@@ -5,10 +5,7 @@ from fastapi.testclient import TestClient
 from api.main import app
 
 
-@pytest.fixture
-def client():
-    """Create test client."""
-    return TestClient(app)
+
 
 
 class TestHealthEndpoint:
