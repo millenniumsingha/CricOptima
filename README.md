@@ -26,9 +26,12 @@ Build optimal fantasy cricket teams using machine learning predictions and const
 
 ## 📸 Screenshots
 
-| **Home** | **Optimization Results** | **Analytics** |
+
+| **Dashboard** | **Constraints Setup** | **Player Analytics** |
 |:---:|:---:|:---:|
-| ![Home](images/app_home.png) | ![Results](images/app_results.png) | ![Analytics](images/app_analytics.png) |
+| ![Dashboard](images/app_dashboard.png) | ![Constraints](images/constraints.png) | ![Analytics](images/player_analytics.png) |
+| **Optimization Results** | **Head-to-Head** | **Simulation** |
+| ![Results](images/optimisation_results.png) | ![Head-to-Head](images/fight.png) | ![Simulation](images/simulation.png) |
 
 ## ✨ Features
 
