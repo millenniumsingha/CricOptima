@@ -46,3 +46,6 @@ htmlcov/
 # Temp
 *.tmp
 *.temp
+
+# AI Workflow
+.cursorrules
