@@ -1,6 +1,6 @@
 # Contributing to CricOptima
 
-Thank you for your interest in contributing to CricOptima! We welcome contributions from the community.
+Thank you for your interest in contributing! We follow a strict Issue-first workflow.
 
 ## 🛠️ Getting Started
 
@@ -17,21 +17,36 @@ Thank you for your interest in contributing to CricOptima! We welcome contributi
 
 ## 📐 Coding Standards
 
--   **Style**: We follow PEP 8. Please use clear variable names and type hints.
--   **Architecture**: Follow the structure defined in [ARCHITECTURE.md](ARCHITECTURE.md). Do not put business logic in the API or App layers.
+-   **Style**: We follow PEP 8. Use clear variable names and type hints.
+-   **Architecture**: Follow the structure defined in [ARCHITECTURE.md](ARCHITECTURE.md).
 -   **Tests**: All new features must include unit tests.
 
 ## 🔄 Workflow
 
-1.  Create a new branch for your feature: `git checkout -b feature/amazing-feature`.
-2.  Commit your changes with clear messages.
-3.  Push to your fork and submit a **Pull Request**.
+> **Important:** Every change requires a GitHub Issue first.
+
+1.  **Create a GitHub Issue** describing your change.
+2.  Create a branch from `master` using the naming convention:
+    ```
+    feat/<description>-<issueID>
+    fix/<description>-<issueID>
+    docs/<description>-<issueID>
+    ```
+3.  Commit your changes with conventional messages:
+    ```
+    feat(scope): description (closes #ID)
+    ```
+4.  Push to your fork and submit a **Pull Request**.
+5.  Ensure your PR includes `Closes #<issueID>` in the description.
+6.  **CI must pass** before merge.
 
 ## 🐛 Reporting Bugs
 
-Please use the GitHub Issues tab to report bugs. Include:
--   Steps to reproduce
--   Expected vs actual behavior
--   Your environment details
+Please use the GitHub Issues tab with our [bug report template](.github/ISSUE_TEMPLATE/bug_report.md).
+
+## 📚 Additional Resources
+
+-   **[CHANGELOG.md](CHANGELOG.md)**: Full release history.
+-   **[DEPLOYMENT.md](DEPLOYMENT.md)**: Deployment instructions.
 
 Happy Coding! 🏏
