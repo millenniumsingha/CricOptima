@@ -156,41 +156,13 @@ pytest tests/ -v
 pytest tests/ --cov=src --cov=api
 ```
 
-## 🎯 Fantasy Scoring Rules
+## 🗺️ Roadmap
 
-| Category | Points |
-|----------|--------|
-| Run | 0.5 |
-| Four | +1 bonus |
-| Six | +2 bonus |
-| 50 runs | +10 bonus |
-| 100 runs | +20 bonus |
-| Wicket | 10 |
-| 3-wicket haul | +5 bonus |
-| 5-wicket haul | +10 bonus |
-| Catch/Stumping/Run-out | 10 |
+- **Advanced Analytics (Q1 2026)**: Player consistency ratings and ROI analysis.
+- **Social Features (Q2 2026)**: Private leagues and custom leaderboards.
+- **Real-time Tracking**: WebSocket integration for live point updates.
 
-## ✨ What's New in v2.0
-
-- **🔌 Live Integration**: Real-time player data fetching via CricAPI.
-- **🔐 User Auth**: Secure JWT-based authentication with bcrypt hashing.
-- **💾 Team Management**: Save, load, and manage your optimized teams.
-- **⚖️ Smart Comparison**: Head-to-Head win probability predictions.
-- **🎲 Monte Carlo Simulation**: 1000x match simulation for variance analysis.
-- **📱 Mobile First**: Fully responsive Streamlit UI for all devices.
-- **🚀 DevOps Ready**: CI/CD pipeline with GitHub Actions.
-
-## 🗺️ Roadmap (v3.0 & Beyond)
-
-### Phase 1: Advanced Analytics (Q1 2026)
-- [ ] **Player Consistency Ratings**: New metric based on coefficient of variation.
-- [ ] **ROI Analysis**: Cost vs. Points historical trend analysis.
-- [ ] **Venue Impact**: Adjust predictions based on pitch conditions.
-
-### Phase 2: Social & Real-time (Q2 2026)
-- [ ] **Private Leagues**: Compete with friends in custom leaderboards.
-- [ ] **Live Tracking**: Real-time point updates via WebSocket during matches.
-- [ ] **Historical Backtesting**: Validate model against past 5 years of IPL data.
+See [CHANGELOG.md](CHANGELOG.md) for full release history and details.
 
 ## 🙏 Acknowledgments
 
